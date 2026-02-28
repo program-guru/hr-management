@@ -3,21 +3,20 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlmodel import Session, select
 
+from app.crud.employee import get_employee_by_email
 from app.db.database import get_session
 from app.models.dto import DTO
-from app.models.employee import Employee
 from app.core.security import verify_password, create_access_token
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
 
-@router.post("/login")
+@router.post("/login", response_model=DTO[dict])
 def login_access_token(
     session: Annotated[Session, Depends(get_session)],
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()]
 ):
     # Query the user
-    # Note: OAuth2 form uses 'username', but our app uses 'email'. 
-    user = session.exec(select(Employee).where(Employee.email == form_data.username)).first()
+    user = get_employee_by_email(session=session, email=form_data.username)
     
     # Verify the user exists and the password matches
     if not user or not verify_password(form_data.password, user.hashed_password):
