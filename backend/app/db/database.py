@@ -1,9 +1,9 @@
 from sqlmodel import SQLModel, create_engine, Session
 
-MYSQL_URL = "mysql://root:root@localhost:3306/hr_management_db"
+from app.core.config import settings
 
 # The engine is the core interface to the database
-engine = create_engine(MYSQL_URL, echo=True)
+engine = create_engine(settings.DATABASE_URI, echo=True)
 
 # Initialize the database by creating all tables defined in our SQLModel models
 def create_db_and_tables():

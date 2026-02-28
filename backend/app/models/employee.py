@@ -15,20 +15,17 @@ class EmployeeBase(SQLModel):
       index=True,
       title="Employee Name",
       description="Full name of the employee",
-      example="John Doe"
   )
   email: EmailStr = Field(
       unique=True,
       index=True,
       title="Email Address",
       description="Unique email address for the employee",
-      example="john.doe@company.com"
   )
   role: Role = Field(
       default=Role.EMPLOYEE,
       title="User Role",
       description="Role assigned to the employee (admin or employee)",
-      example="employee"
   )
 
 
@@ -53,7 +50,6 @@ class EmployeeCreate(EmployeeBase):
       max_length=128,
       title="Password",
       description="Password for authentication (min 8 characters)",
-      example="SecurePass123!"
   )
 
 
@@ -67,7 +63,6 @@ class EmployeeUpdate(SQLModel):
       index=True,
       title="Employee Name",
       description="Full name of the employee",
-      example="John Updated"
   )
   email: EmailStr | None = Field(
       default=None,
@@ -75,11 +70,9 @@ class EmployeeUpdate(SQLModel):
       index=True,
       title="Email Address",
       description="Email address of the employee",
-      example="john.updated@company.com"
   )
   role: Role | None = Field(
       default=None,
       title="User Role",
       description="Role to assign (admin or employee)",
-      example="admin"
   )
