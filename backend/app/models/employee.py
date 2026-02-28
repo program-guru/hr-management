@@ -52,7 +52,6 @@ class EmployeeCreate(EmployeeBase):
       description="Password for authentication (min 8 characters)",
   )
 
-
 # Model for updating an existing employee
 class EmployeeUpdate(SQLModel):
   id: int = Field(title="Employee ID", description="ID of employee to update")

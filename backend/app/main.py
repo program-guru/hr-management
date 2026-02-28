@@ -2,7 +2,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
 from app.db.database import create_db_and_tables
-from app.api.routers import auth
+from app.api.routers import auth, employees
 
 # The lifespan context manager handles startup and shutdown events
 @asynccontextmanager
@@ -22,3 +22,4 @@ app = FastAPI(
 
 # Register our authentication router
 app.include_router(auth.router)
+app.include_router(employees.router)
