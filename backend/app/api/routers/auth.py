@@ -4,6 +4,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 from sqlmodel import Session, select
 
 from app.db.database import get_session
+from app.models.dto import DTO
 from app.models.employee import Employee
 from app.core.security import verify_password, create_access_token
 
@@ -31,4 +32,8 @@ def login_access_token(
         data={"sub": user.email, "role": user.role}
     )
     
-    return {"access_token": access_token, "token_type": "bearer"}
+    return DTO(
+        success=True,
+        message="Login successful",
+        data={"access_token": access_token, "token_type": "bearer"}
+    )
