@@ -6,7 +6,7 @@ MYSQL_URL = "mysql://root:root@localhost:3306/hr_management_db"
 engine = create_engine(MYSQL_URL, echo=True)
 
 # Initialize the database by creating all tables defined in our SQLModel models
-def init_db():
+def create_db_and_tables():
     SQLModel.metadata.create_all(engine)
 
 # Dependency function to get a database session

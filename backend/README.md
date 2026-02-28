@@ -1,5 +1,5 @@
 backend/
-├── src/
+├── app/
 │   ├── main.py              # The entry point of the FastAPI application
 │   ├── api/
 │   │   ├── dependencies.py  # Reusable dependencies (like checking current_user)
