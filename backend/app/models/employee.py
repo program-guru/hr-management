@@ -1,6 +1,10 @@
-from sqlmodel import Field, SQLModel
+from sqlmodel import Field, Relationship, SQLModel
 from enum import Enum
 from pydantic import EmailStr
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+  from app.models.leaves import Leave
 
 # Define user roles for Authorization
 class Role(str, Enum):
@@ -27,7 +31,11 @@ class EmployeeBase(SQLModel):
       title="User Role",
       description="Role assigned to the employee (admin or employee)",
   )
-
+  leave_balance: int = Field(
+        default=20,
+        title="Leave Balance",
+        description="Number of available leave days"
+    )
 
 # Actual database table
 class Employee(EmployeeBase, table=True):
@@ -36,6 +44,7 @@ class Employee(EmployeeBase, table=True):
       title="Hashed Password",
       description="Securely hashed password for authentication"
   )
+  leaves: list["Leave"] = Relationship(back_populates="employee")
 
 
 # Public model for reading
