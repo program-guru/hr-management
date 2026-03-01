@@ -4,12 +4,20 @@ from pydantic import EmailStr
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
+  from app.models.payroll import Payroll
   from app.models.leaves import Leave
 
 # Define user roles for Authorization
 class Role(str, Enum):
   ADMIN = "admin"
   EMPLOYEE = "employee"
+
+class Department(str, Enum):
+  HR = "HR"
+  ENGINEERING = "Engineering"
+  SALES = "Sales"
+  MARKETING = "Marketing"
+  FINANCE = "Finance"
 
 # Base model for Employee with common fields
 class EmployeeBase(SQLModel):
@@ -35,7 +43,12 @@ class EmployeeBase(SQLModel):
         default=20,
         title="Leave Balance",
         description="Number of available leave days"
-    )
+  )
+  department: Department = Field(
+      default=Department.HR,
+      title="Department",
+      description="Department the employee belongs to"
+  )
 
 # Actual database table
 class Employee(EmployeeBase, table=True):
@@ -45,7 +58,7 @@ class Employee(EmployeeBase, table=True):
       description="Securely hashed password for authentication"
   )
   leaves: list["Leave"] = Relationship(back_populates="employee")
-
+  payrolls: list["Payroll"] = Relationship(back_populates="employee")
 
 # Public model for reading
 class EmployeeRead(EmployeeBase):
@@ -83,4 +96,9 @@ class EmployeeUpdate(SQLModel):
       default=None,
       title="User Role",
       description="Role to assign (admin or employee)",
+  )
+  department: Department | None = Field(
+      default=None,
+      title="Department",
+      description="Department the employee belongs to",
   )

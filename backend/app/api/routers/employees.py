@@ -4,7 +4,7 @@ from sqlmodel import Session
 
 import app.crud.employee as crud
 from app.db.database import get_session
-from app.models.employee import Employee, EmployeeCreate, EmployeeRead, EmployeeUpdate
+from app.models.employee import Employee, EmployeeCreate, EmployeeRead, EmployeeUpdate, Role
 from app.api.dependencies import get_current_admin, get_current_user
 from app.models.dto import DTO
 
@@ -34,24 +34,21 @@ def create_new_employee(
         data=new_employee
     )
 
-@router.get("/me", response_model=DTO[EmployeeRead])
-def read_employee_me(
-    # Any logged-in user can access this
-    current_user: Annotated[Employee, Depends(get_current_user)]
-):
-    return DTO(
-        success=True,
-        message="Current employee retrieved successfully",
-        data=current_user
-    )
-
-@router.get("/", response_model=DTO[list[EmployeeRead]])
+@router.get("/", response_model=DTO[list[EmployeeRead] | EmployeeRead])
 def read_employees(
     session: Annotated[Session, Depends(get_session)],
-    current_admin: Annotated[Employee, Depends(get_current_admin)],
+    current_user: Annotated[Employee, Depends(get_current_user)],
     skip: int = 0,
     limit: int = 100,
 ):
+    if current_user.role != Role.ADMIN:
+        # Non-admin users can only see their own record
+        return DTO(
+            success=True,
+            message="Employee retrieved successfully",
+            data=current_user
+        )
+
     employees = crud.get_multi_employees(session=session, skip=skip, limit=limit)
     return DTO(
         success=True,

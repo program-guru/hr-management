@@ -17,9 +17,8 @@ def apply_for_leave(
     session: Annotated[Session, Depends(get_session)],
     current_user: Annotated[Employee, Depends(get_current_user)]
 ):
-    if current_user.id is None:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="User ID is invalid")
-    
+    assert current_user.id is not None
+
     leave = crud.create_leave_request(
         session=session, leave_in=leave_in, employee_id=current_user.id
     )
@@ -32,8 +31,7 @@ def get_leaves(
     skip: int = 0,
     limit: int = 100
 ):
-    if current_user.id is None:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="User ID is invalid")
+    assert current_user.id is not None
 
     if current_user.role == Role.ADMIN:
         leaves = crud.get_all_leaves(session=session, skip=skip, limit=limit)
@@ -51,8 +49,7 @@ def update_leave_status_admin(
     session: Annotated[Session, Depends(get_session)],
     current_admin: Annotated[Employee, Depends(get_current_admin)]
 ):
-    if current_admin.id is None:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Admin ID is invalid")
+    assert current_admin.id is not None
     
     db_leave = crud.get_leave_by_id(session=session, leave_id=leave_id)
 

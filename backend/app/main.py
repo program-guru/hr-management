@@ -4,7 +4,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 
 from app.db.database import create_db_and_tables
-from app.api.routers import auth, employees, leaves
+from app.api.routers import auth, employees, leaves, payroll
 from app.models.dto import DTO
 
 # The lifespan context manager handles startup and shutdown events
@@ -49,3 +49,4 @@ async def global_exception_handler(request: Request, exc: Exception):
 app.include_router(auth.router)
 app.include_router(employees.router)
 app.include_router(leaves.router)
+app.include_router(payroll.router)
